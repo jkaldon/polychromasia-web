@@ -1,27 +1,32 @@
 # PolychromasiaWeb
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
+## Spots on board
+n * n
+rows:spotCount:delta
+   1:        1:    1
+   2:        4:    3
+   3:        9:    5
+   4:       16:    7
+   5:       25:    9
+   6:       36:   11
 
-## Development server
+## Spots in row
+2 * n - 1
+row:spotCount:delta
+  1:        1:  n/a
+  2:        3:    2
+  3:        5:    2
+  4:        7:    2
+  5:        9:    2
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Connections
+3 * n * (n + 1) / 2
+row:spotCount:delta
+  0:        0:    0
+  1:        3:    3
+  2:        9:    6
+  3:       18:    9
+  4:       30:   12
+  5:       45:   15
+  6:       63:   18
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
