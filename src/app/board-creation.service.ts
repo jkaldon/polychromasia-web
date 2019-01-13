@@ -2,7 +2,7 @@ import { Connection } from './board/connection';
 import { Injectable } from '@angular/core';
 import { Board } from './board/board';
 import { Spot } from './board/spot';
-import { concat } from 'rxjs';
+import { ConnectionSlant } from './board/connection-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -37,31 +37,44 @@ export class BoardCreationService {
         let hc: Connection;
 
         if (currentRow.length === 0) {
-          lc = new Connection();
+          lc = new Connection(ConnectionSlant.Forward);
           connections.push(lc);
         } else {
           leftSpot = currentRow[currentRow.length - 1];
           lc = leftSpot.rc;
         }
 
-        rc = new Connection();
-        connections.push(rc);
+        if (currentRow.length % 2 === 0) {
+          rc = new Connection(ConnectionSlant.Back);
+          connections.push(rc);
+        } else {
+          rc = new Connection(ConnectionSlant.Forward);
+          connections.push(rc);
+        }
 
         if (currentRow.length % 2 === 0) {
-          hc = new Connection();
+          hc = new Connection(ConnectionSlant.Horizontal);
           connections.push(hc);
         } else {
           upSpot = previousRow[currentRow.length - 1];
           hc = upSpot.hc;
         }
 
-        const spot: Spot = new Spot(lc, rc, hc);
+        const spot: Spot = new Spot(currentRow.length, rowIndex, lc, rc, hc);
 
         currentRow.push(spot);
       }
     }
 
-    return new Board(rows, connections);
+    const board = new Board(rows, connections);
+
+    rows.forEach(row =>
+      row.forEach(spot => {
+        spot.setBoard(board);
+      })
+    );
+
+    return board;
   }
 
   private calculateSpotsInRow(rowIndex: number) {
