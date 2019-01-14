@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { Board } from './board/board';
 import { Spot } from './board/spot';
 import { ConnectionSlant } from './board/connection-type.enum';
+import { NextColorService } from './next-color.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoardCreationService {
 
-  constructor() { }
+  constructor(private nextColorService: NextColorService) { }
 
   public createBoard(rowCount: number): Board {
     const rows: Array<Spot[]> = new Array(rowCount);
@@ -66,7 +67,7 @@ export class BoardCreationService {
       }
     }
 
-    const board = new Board(rows, connections);
+    const board = new Board(rows, connections, this.nextColorService);
 
     rows.forEach(row =>
       row.forEach(spot => {

@@ -5,6 +5,7 @@ import { Player } from '../player';
 import Canvasimo from 'canvasimo';
 import { Board } from './board';
 import { ConnectionColor } from './connection-color.enum';
+import { ConnectionSlant } from './connection-type.enum';
 
 export class Spot implements DrawableClass {
   private board: Board;
@@ -42,6 +43,19 @@ export class Spot implements DrawableClass {
 
       canvas.beginPath();
       canvas.fillPath([rcStart, rcEnd, lcEnd, lcStart], colorHexString);
+      canvas.closePath();
+
+      canvas.beginPath();
+      canvas.setTextAlign('center');
+      if (this.lc.type === ConnectionSlant.Forward) {
+        const initialsX = Math.max(lcStart.x, lcEnd.x);
+        const initialsY = lcStart.y + ((lcEnd.y - lcStart.y) * 2 / 3);
+        canvas.strokeText(this.player.initials, initialsX, initialsY, this.board.spotSize / 2, '#000000');
+      } else {
+        const initialsX = Math.max(lcStart.x, lcEnd.x);
+        const initialsY = lcStart.y + ((lcEnd.y - lcStart.y) / 2);
+        canvas.strokeText(this.player.initials, initialsX, initialsY, this.board.spotSize / 2, '#000000');
+      }
       canvas.closePath();
     }
     if (this.spotIndex % 2 === 0) {

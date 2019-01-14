@@ -4,6 +4,7 @@ import { Spot } from './spot';
 import { DrawableClass } from '../drawable-class';
 import Canvasimo from 'canvasimo';
 import { Board } from './board';
+import { Player } from '../player';
 
 export class Connection implements DrawableClass {
   private board: Board;
@@ -17,6 +18,15 @@ export class Connection implements DrawableClass {
   public spots: Spot[] = [];
 
   constructor(public type: ConnectionSlant) {
+  }
+
+  public setColor(currentPlayer: Player, color: number): any {
+    this.color = color;
+    this.spots.forEach(s => {
+      if (s.color && ! s.player) {
+        s.player = currentPlayer;
+      }
+    });
   }
 
   public setBoard(board: Board): void {
@@ -85,6 +95,11 @@ export class Connection implements DrawableClass {
     } else {
       canvas.setStrokeDash([]);
     }
+    canvas.closePath();
+
+    canvas.beginPath();
+    canvas.fillCircle(this.xOffsetStart, this.yOffsetStart, 3, false, '#505050');
+    canvas.fillCircle(this.xOffsetEnd, this.yOffsetEnd, 3, false, '#505050');
     canvas.closePath();
   }
 
@@ -182,7 +197,7 @@ export class Connection implements DrawableClass {
     const distanceFromNearestPointOnLineToEnd = Math.sqrt(
         Math.pow(nearestPointOnLineX - this.xOffsetEnd, 2) + Math.pow(nearestPointOnLineY - this.yOffsetEnd, 2)
     );
-    return distanceFromMouseToNearestPointOnLine < 4
+    return distanceFromMouseToNearestPointOnLine < 9
         && distanceFromNearestPointOnLineToEnd < distanceFromStartToEnd
         && distanceFromNearestPointOnLineToStart < distanceFromStartToEnd;
   }

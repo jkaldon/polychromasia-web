@@ -1,3 +1,4 @@
+import { Player } from './player';
 import { ConnectionColor } from './board/connection-color.enum';
 import { BoardCreationService } from './board-creation.service';
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
@@ -16,6 +17,7 @@ export class AppComponent implements AfterViewInit {
 
   constructor(private boardCreationService: BoardCreationService) {
     this.board = this.boardCreationService.createBoard(5);
+    this.board.setPlayerCount(2);
   }
 
   ngAfterViewInit(): void {
@@ -48,6 +50,7 @@ export class AppComponent implements AfterViewInit {
       draw();
       this.board.onMouseMove(canvas, e);
     };
+
     canvasElement.onclick = (e) => {
       this.board.onMouseClick(canvas, e);
       draw();
