@@ -4,6 +4,7 @@ import { Board } from './board/board';
 import { Spot } from './board/spot';
 import { ConnectionSlant } from './board/connection-type.enum';
 import { NextColorService } from './next-color.service';
+import { Player } from './player';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class BoardCreationService {
 
   constructor(private nextColorService: NextColorService) { }
 
-  public createBoard(rowCount: number): Board {
+  public createBoard(playerCount: number, rowCount: number): Board {
     const rows: Array<Spot[]> = new Array(rowCount);
     const connections: Connection[] = [];
 
@@ -67,15 +68,37 @@ export class BoardCreationService {
       }
     }
 
-    const board = new Board(rows, connections, this.nextColorService);
+    const players: Array<Player> = new Array<Player>(playerCount);
+    for (let i = 0; i < playerCount; i++) {
+      players[i] = new Player('P' + (i + 1));
+    }
+
+    const board = new Board(players, rows, connections);
 
     rows.forEach(row =>
       row.forEach(spot => {
-        spot.setBoard(board);
+        this.afterBoardCreated(spot.lc);
+        this.afterBoardCreated(spot.rc);
+        this.afterBoardCreated(spot.hc);
       })
     );
 
+    board.currentColor = this.nextColorService.getNextColor(board.currentPlayerIndex);
+
     return board;
+  }
+
+  private afterBoardCreated(connection: Connection): void {
+    if (!connection.minRowIndex) {
+      connection.minRowIndex = connection.spots
+          .reduce((min, s) => Math.min(min, s.rowIndex), 254);
+
+      const spotsOnRow = connection.spots
+          .filter(s => s.rowIndex === connection.minRowIndex);
+
+      connection.minSpotIndex = spotsOnRow
+          .reduce((min, s) => Math.min(min, s.spotIndex), 254);
+    }
   }
 
   private calculateSpotsInRow(rowIndex: number) {

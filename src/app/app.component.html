@@ -1,15 +1,11 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
     Welcome to {{ title }}!
   </h1>
   <h3>
     <span>Current: {{board.players[board.currentPlayerIndex].initials}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
-    <span [ngStyle]="{'color': board.getCurrentHexColorString()}">{{board.getCurrentHexColorString()}}</span>
+    <span [ngStyle]="{'color': boardDrawingService.getHexColorString(board.currentColor)}">{{boardDrawingService.getHexColorString(board.currentColor)}}</span>
   </h3>
   <canvas #canvas></canvas>
 </div>
-<button (click)="onRedClick($event)">Red</button>
-<button (click)="onGreenClick($event)">Green</button>
-<button (click)="onBlueClick($event)">Blue</button>
 <router-outlet></router-outlet>

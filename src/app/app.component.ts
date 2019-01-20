@@ -1,5 +1,6 @@
-import { Player } from './player';
-import { ConnectionColor } from './board/connection-color.enum';
+import { BoardInteractionService } from './board-interaction.service';
+import { BoardDrawingService } from './board-drawing.service';
+import { BoardUpdatingService } from './board-updating.service';
 import { BoardCreationService } from './board-creation.service';
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import Canvasimo from 'canvasimo';
@@ -15,9 +16,13 @@ export class AppComponent implements AfterViewInit {
   title = 'Polychromasia';
   board: Board;
 
-  constructor(private boardCreationService: BoardCreationService) {
-    this.board = this.boardCreationService.createBoard(5);
-    this.board.setPlayerCount(2);
+  constructor(
+    public boardCreationService: BoardCreationService,
+    public boardUpdatingService: BoardUpdatingService,
+    public boardDrawingService: BoardDrawingService,
+    public boardInteractionService: BoardInteractionService
+  ) {
+    this.board = this.boardCreationService.createBoard(2, 5);
   }
 
   ngAfterViewInit(): void {
@@ -28,7 +33,7 @@ export class AppComponent implements AfterViewInit {
       const width = canvas.getBoundingClientRect().width;
       const height = width;
 
-      this.board.setSize(width, height);
+      this.boardUpdatingService.setSize(this.board, width, height);
 
       canvas
         .clearCanvas()
@@ -38,8 +43,8 @@ export class AppComponent implements AfterViewInit {
         .setStrokeWidth(1)
         .save();
 
-      this.board.update();
-      this.board.draw(canvas);
+      this.boardUpdatingService.update(this.board);
+      this.boardDrawingService.draw(this.board, canvas);
     };
 
     draw();
@@ -48,22 +53,12 @@ export class AppComponent implements AfterViewInit {
 
     canvasElement.onmousemove = (e) => {
       draw();
-      this.board.onMouseMove(canvas, e);
+      this.boardInteractionService.onMouseMove(this.board, canvas, e);
     };
 
     canvasElement.onclick = (e) => {
-      this.board.onMouseClick(canvas, e);
+      this.boardInteractionService.onMouseClick(this.board, canvas, e);
       draw();
     };
-  }
-
-  public onRedClick(): void {
-    this.board.setNextColor(ConnectionColor.RED);
-  }
-  public onGreenClick(): void {
-    this.board.setNextColor(ConnectionColor.GREEN);
-  }
-  public onBlueClick(): void {
-    this.board.setNextColor(ConnectionColor.BLUE);
   }
 }
