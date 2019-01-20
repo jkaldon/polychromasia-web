@@ -65,7 +65,7 @@ export class Spot implements DrawableClass {
     }
   }
 
-  public color(): SpotColor {
+  public getColor(): SpotColor {
     let result: SpotColor;
     if (this.lc.color && this.rc.color && this.hc.color) {
       // tslint:disable-next-line:no-bitwise
@@ -75,7 +75,7 @@ export class Spot implements DrawableClass {
   }
 
   private getHexColorString(): string {
-    const color = this.color();
+    const color = this.getColor();
     if (color) {
       // tslint:disable-next-line:no-bitwise
       const red = color & ConnectionColor.RED;

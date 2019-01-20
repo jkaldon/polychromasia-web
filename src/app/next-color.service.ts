@@ -33,6 +33,14 @@ export class NextColorService {
     return result;
   }
 
+  public peekNextColor(currentPlayerIndex: number): ConnectionColor {
+    if (this.nextColorOverride) {
+      return this.nextColorOverride;
+    }
+    this.nextColorOverride = this.getNextColor(currentPlayerIndex);
+    return this.nextColorOverride;
+  }
+
   public setNextColor(playerIndex: number, color: ConnectionColor): void {
     this.nextColorOverride = color;
   }

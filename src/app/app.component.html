@@ -3,6 +3,10 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
+  <h3>
+    <span>Current: {{board.players[board.currentPlayerIndex].initials}} &nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <span [ngStyle]="{'color': board.getCurrentHexColorString()}">{{board.getCurrentHexColorString()}}</span>
+  </h3>
   <canvas #canvas></canvas>
 </div>
 <button (click)="onRedClick($event)">Red</button>

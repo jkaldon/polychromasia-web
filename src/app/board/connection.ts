@@ -20,11 +20,13 @@ export class Connection implements DrawableClass {
   constructor(public type: ConnectionSlant) {
   }
 
-  public setColor(currentPlayer: Player, color: number): any {
+  public setColor(currentPlayer: Player, color: ConnectionColor): any {
     this.color = color;
     this.spots.forEach(s => {
-      if (s.color && ! s.player) {
+      if (s.getColor() && ! s.player) {
         s.player = currentPlayer;
+        console.log(this.spots);
+        console.log(currentPlayer.initials);
       }
     });
   }

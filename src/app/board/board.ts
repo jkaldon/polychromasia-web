@@ -79,14 +79,28 @@ export class Board implements DrawableClass {
     const connectionsInFocus = this.connections.filter(c => c.isInFocus(mouseX, mouseY));
     if (connectionsInFocus.length === 1) {
       connectionsInFocus[0].setColor(this.players[this.currentPlayerIndex], this.currentColor);
-      this.currentColor = this.nextColorService.getNextColor(this.currentPlayerIndex);
+
       this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.players.length;
+      this.currentColor = this.nextColorService.getNextColor(this.currentPlayerIndex);
     }
   }
 
   public setNextColor(color: ConnectionColor): void {
     this.nextColorService.setNextColor(this.currentPlayerIndex, color);
   }
+
+  public getCurrentHexColorString(): string {
+    // tslint:disable-next-line:no-bitwise
+    const red = this.currentColor & ConnectionColor.RED;
+    // tslint:disable-next-line:no-bitwise
+    const green = this.currentColor & ConnectionColor.GREEN;
+    // tslint:disable-next-line:no-bitwise
+    const blue = this.currentColor & ConnectionColor.BLUE;
+
+    // tslint:disable-next-line:no-bitwise
+    return '#' + ((1 << 24) + red + green + blue).toString(16).slice(1);
+  }
+
 
   private calculateCanvasXY(canvas: Canvasimo, e: MouseEvent): { mouseX: number; mouseY: number; } {
     const mouseX = (e.x - canvas.getCanvas().offsetLeft) - (canvas.getCanvas().width / 2);
