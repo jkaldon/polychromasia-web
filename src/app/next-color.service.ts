@@ -1,63 +1,43 @@
 import { ConnectionColor } from './board/connection-color.enum';
 import { Injectable } from '@angular/core';
-import { Player } from './player';
-import { NextColorStrategy } from './next-color-strategy.enum';
+import { NextColorQueueType } from './next-color-queue-type.enum';
+import { NextColorStrategy } from './next-color-strategy';
+import { NextColorStrategyIface } from './next-color-strategy-iface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NextColorService {
-  private nextColorStrategy: NextColorStrategy = NextColorStrategy.RANDOM;
-  private nextColorOverride: ConnectionColor;
+  private nextColorStrategy: NextColorStrategyIface = NextColorStrategy.COMPLETELY_RANDOM;
+  private colorQueue: Array<ConnectionColor[]>;
 
   constructor() { }
 
-  public setNextColorStrategy(strategy: NextColorStrategy): void {
+  public configure(
+      totalConnectionCount: number,
+      playerCount: number,
+      strategy: NextColorStrategyIface,
+      queueType: NextColorQueueType
+  ): void {
     this.nextColorStrategy = strategy;
-  }
+    const connectionsPerPlayer = Math.trunc(totalConnectionCount / playerCount);
+    const connectionsLastPlayer = totalConnectionCount - (connectionsPerPlayer * (playerCount - 1));
 
-  public getNextColor(playerIndex: number): ConnectionColor {
-    let result: ConnectionColor;
+    switch (queueType) {
+      case NextColorQueueType.PER_PLAYER:
+        this.colorQueue = new Array<ConnectionColor[]>(playerCount);
 
-    switch (this.nextColorStrategy) {
-      case NextColorStrategy.RANDOM:
-        result = this.randomColor();
+        this.colorQueue[playerCount - 1] = strategy.getNext(connectionsLastPlayer);
+
+        for (let i = 0; i < playerCount; i++) {
+          this.colorQueue[i] = strategy.getNext()
+        }
+        break;
+
+      case NextColorQueueType.SINGLE:
+        this.colorQueue = new Array<ConnectionColor[]>(1);
         break;
     }
 
-    if (this.nextColorOverride) {
-      result = this.nextColorOverride;
-      this.nextColorOverride = null;
-    }
-
-    return result;
-  }
-
-  public peekNextColor(currentPlayerIndex: number): ConnectionColor {
-    if (this.nextColorOverride) {
-      return this.nextColorOverride;
-    }
-    this.nextColorOverride = this.getNextColor(currentPlayerIndex);
-    return this.nextColorOverride;
-  }
-
-  public setNextColor(playerIndex: number, color: ConnectionColor): void {
-    this.nextColorOverride = color;
-  }
-
-  public randomColor(): ConnectionColor {
-    const r = Math.trunc(Math.random() * 3.0);
-
-    switch (r) {
-      case 0:
-        return ConnectionColor.RED;
-        break;
-      case 1:
-        return ConnectionColor.GREEN;
-        break;
-      case 2:
-        return ConnectionColor.BLUE;
-        break;
-    }
   }
 }
