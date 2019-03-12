@@ -1,5 +1,7 @@
 # PolychromasiaWeb
 
+![Image of Polychromasia](polychromasia.png)
+
 ## To run
 Run the angular project using the command below and then open your browser to http://localhost:4200 to play.
 ```
@@ -12,6 +14,8 @@ ERROR in node_modules/canvasimo/build/index.d.ts(61,52): error TS2304: Cannot fi
 ...
 Failed to compile.
 ```
+
+
 
 ## Notes
 
