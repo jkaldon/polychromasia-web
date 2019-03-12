@@ -14,7 +14,7 @@ ERROR in node_modules/canvasimo/build/index.d.ts(61,52): error TS2304: Cannot fi
 ...
 Failed to compile.
 ```
-* Looking for a permenant fix, but I found a hacky workaround.  Simply edit any file after running `ng serve` and then save it.  For some reason, it complains but then works.
+* Looking for a [permanent fix](https://github.com/JakeSidSmith/canvasimo/issues/120), but I found a hacky workaround.  Simply edit any file after running `ng serve` and then save it.  For some reason, it complains but then works.
 * Scoring is not implemented.
 
 ## Notes
